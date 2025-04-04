@@ -8,6 +8,14 @@ public class PlayerController : MonoBehaviour
     public Transform attackPoint;           // 공격 위치 (플레이어 앞쪽에 배치)
     public LayerMask enemyLayers;           // 적이 포함된 레이어
 
+    [Header("점프 관련 설정")]
+    public float jumpForce = 7f;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+    
+    private bool isGrounded;
+
     private Rigidbody2D rb;
     private Vector2 moveDirection;
     private Animator animator;
@@ -29,6 +37,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
         // 현재 Attack 상태이면 이동 입력 무시
         bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
 
@@ -39,7 +49,7 @@ public class PlayerController : MonoBehaviour
             float moveY = Input.GetAxis("Vertical");
             moveDirection = new Vector2(moveX, moveY).normalized;
 
-            // 좌우 입력에 따라 스프라이트 반전 (왼쪽이면 flipX true, 오른쪽이면 false)
+            // 좌우 입력에 따라 스프라이트 반전
             if (moveX < 0)
             {
                 spriteRenderer.flipX = true;
@@ -54,17 +64,23 @@ public class PlayerController : MonoBehaviour
             moveDirection = Vector2.zero;
         }
 
-        // 공격 입력: 키패드 1을 누르면 공격 (현재 공격 중이 아닐 때만)
+        // 공격 입력: Q 키
         if (!isAttacking && Input.GetKeyDown(KeyCode.Q))
         {
             animator.SetBool("IsRunning", false);
             animator.SetTrigger("Attack");
         }
 
-        // 이동 관련 입력 처리 (공격 중이 아닐 때)
+        // 점프 입력: 스페이스바 (바닥에 있을 때만)
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            animator.SetTrigger("JumpTrigger"); // Animator에서 JumpTrigger 트리거 필요
+        }
+
+        // 달리기 애니메이션 처리
         if (!isAttacking)
         {
-            // 달리기 입력: 왼쪽(A, LeftArrow) 또는 오른쪽(D, RightArrow) 키가 눌렸으면 바로 Run 애니메이션 시작
             bool isRunningInput = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) ||
                                    Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
             animator.SetBool("IsRunning", isRunningInput);
@@ -77,34 +93,37 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Animator의 IsRunning 파라미터가 true일 때만 이동 처리
         if (animator.GetBool("IsRunning"))
         {
-            rb.velocity = moveDirection * moveSpeed;
+            rb.velocity = new Vector2(moveDirection.x * moveSpeed, rb.velocity.y);
         }
-        else
+        else if (isGrounded) // 달리지 않고 땅에 있으면 x 속도 0
         {
-            rb.velocity = Vector2.zero;
+            rb.velocity = new Vector2(0, rb.velocity.y);
         }
     }
 
-    // Attack 애니메이션의 Animation Event에서 호출되는 함수
     public void PerformAttack()
     {
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
             Debug.Log("공격에 맞은 적: " + enemy.name);
-            // 예시: enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
         }
     }
 
-    // 에디터에서 공격 범위를 시각화하기 위한 함수
     void OnDrawGizmosSelected()
     {
-        if (attackPoint == null)
-            return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        if (attackPoint != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        }
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
     }
 }
