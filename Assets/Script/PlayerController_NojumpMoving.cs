@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_NojumpMoving : MonoBehaviour
 {
     public float moveSpeed = 5f;            // 이동 속도
     public float attackRange = 1f;          // 공격 범위
@@ -19,15 +19,12 @@ public class PlayerController : MonoBehaviour
     public float crouchForwardSpeed = 1f;   // croush 상태에서 전진하는 속도
 
     [Header("Fall 조건 (캐릭터 기준)")]
-    public float fallThreshold = 0.5f;      // 점프 후 최고점과 현재 높이 차이가 이 값 이상이면 Fall 전이
-
-    [Header("Air Control")]
-    public float airControlMultiplier = 0.5f; // 공중에서의 수평 이동 계수 (땅에서는 1)
+    public float fallThreshold = 0.5f;      // 점프 후 최고점에서 떨어진 높이가 이 값 이상이면 Fall 전이 (점프 후 전용)
 
     private bool isGrounded;
     private bool wasGrounded = false;       // 이전 프레임의 바닥 접촉 상태
 
-    // 땅에 있을 때의 수평 입력 값 (공중에서는 마지막 입력 유지)
+    // 점프 직전에 땅에 있을 때의 수평 입력 값을 저장 (공중에서는 업데이트되지 않음)
     private float lastHorizontalInput = 0f;
 
     private Rigidbody2D rb;
@@ -35,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    // 초기 localScale (플립 시 사용)
+    // 초기 localScale 저장 (플립 시 사용)
     private Vector3 initialScale;
 
     // 점프 관련 변수
@@ -74,7 +71,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("verticalVelocity", rb.velocity.y);
 
-        // 점프 입력: 땅에 있을 때 스페이스바 입력 시 점프 시작
+        // 점프 입력 (땅에 있을 때)
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             ResetAllTriggers();
@@ -86,40 +83,44 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Jump triggered. jumpStartY = " + jumpStartY);
         }
 
-        // 공중에 있을 때 점프 상태이면 최고점 업데이트
+        // 공중에 있을 때, 점프 중이면 최고점 업데이트
         if (!isGrounded && isJumping)
         {
             maxJumpY = Mathf.Max(maxJumpY, transform.position.y);
         }
 
-        // Fall 전이 처리:
-        // 달리다가 ledge에서 떨어지는 경우
-        if (!isGrounded && rb.velocity.y < 0f && wasGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
+        // Fall 전이 처리
+        if (!isGrounded && rb.velocity.y < 0f && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
         {
-            if (!Input.GetKey(KeyCode.Q))
+            // 달리다가 ledge에서 떨어지는 경우: 이전 프레임에 땅에 있었던 경우
+            if (wasGrounded)
             {
-                ResetAllTriggers();
-                Debug.Log("FallTrigger (running off ledge) called. rb.velocity.y = " + rb.velocity.y);
-                animator.SetTrigger("FallTrigger");
-            }
-        }
-        // 점프 후 낙하하는 경우
-        else if (!isGrounded && isJumping && rb.velocity.y < 0f && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
-        {
-            float dropHeight = maxJumpY - transform.position.y;
-            if (dropHeight >= fallThreshold)
-            {
+                // 즉시 Fall 전이
                 if (!Input.GetKey(KeyCode.Q))
                 {
                     ResetAllTriggers();
-                    Debug.Log("FallTrigger (jump fall) called. dropHeight = " + dropHeight);
+                    Debug.Log("FallTrigger (running off ledge) called. rb.velocity.y = " + rb.velocity.y);
                     animator.SetTrigger("FallTrigger");
-                    isJumping = false;
+                }
+            }
+            // 점프 후 낙하하는 경우: 최고점과 현재 높이 차이가 fallThreshold 이상이면 Fall 전이
+            else if (isJumping)
+            {
+                float dropHeight = maxJumpY - transform.position.y;
+                if (dropHeight >= fallThreshold)
+                {
+                    if (!Input.GetKey(KeyCode.Q))
+                    {
+                        ResetAllTriggers();
+                        Debug.Log("FallTrigger (jump fall) called. dropHeight = " + dropHeight);
+                        animator.SetTrigger("FallTrigger");
+                        isJumping = false;
+                    }
                 }
             }
         }
 
-        // 착지 감지: 이전 프레임에 공중이었고, 현재 땅이면
+        // 착지 감지
         if (!wasGrounded && isGrounded)
         {
             ResetAllTriggers();
@@ -138,7 +139,7 @@ public class PlayerController : MonoBehaviour
         bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
         bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
 
-        // 이동 입력 처리 및 좌우 반전 (공격이나 croush 상태에서는 moveDirection을 0으로 설정)
+        // 이동 입력 처리 및 좌우 반전
         if (!isAttacking && !isCroush)
         {
             float moveX = Input.GetAxis("Horizontal");
@@ -155,7 +156,7 @@ public class PlayerController : MonoBehaviour
             moveDirection = Vector2.zero;
         }
 
-        // 공격 입력: Q 키
+        // 공격 입력
         if (!isAttacking && Input.GetKeyDown(KeyCode.Q))
         {
             ResetAllTriggers();
@@ -163,7 +164,7 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Attack");
         }
 
-        // 달리기 애니메이션 처리: 땅에 있고, 공격이나 croush 상태가 아닐 때
+        // 달리기 애니메이션 처리
         if (!isAttacking && !isCroush && isGrounded)
         {
             bool isRunningInput = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) ||
@@ -178,57 +179,22 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 땅에 있을 때의 처리
-        if (isGrounded)
-        {
-            bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-            bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
+        bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
 
-            // 1. 땅에서 공격 중일 때는 이동 불가
-            if (isAttacking)
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-            }
-            // 2. 착지 후 croush 상태일 때는 crouchForwardSpeed만큼 살짝 이동 가능
-            else if (isCroush)
-            {
-                float inputX = Input.GetAxisRaw("Horizontal");
-                rb.velocity = new Vector2(inputX * crouchForwardSpeed, rb.velocity.y);
-            }
-            else
-            {
-                float inputX = Input.GetAxisRaw("Horizontal");
-                if (Mathf.Approximately(inputX, 0f))
-                {
-                    rb.velocity = new Vector2(0, rb.velocity.y);
-                }
-                else
-                {
-                    rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
-                }
-            }
-        }
-        else
+        if (isCroush)
         {
-            // 공중에서는 공격 중이 아니면 airControlMultiplier를 적용하고,
-            // 입력이 없으면 Lerp를 통해 감속, 있을 경우 현재 방향으로 이동
-            bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-            if (!isAttacking)
-            {
-                float inputX = Input.GetAxisRaw("Horizontal");
-                if (Mathf.Approximately(inputX, 0f))
-                {
-                    rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, 0.3f), rb.velocity.y);
-                }
-                else
-                {
-                    rb.velocity = new Vector2(moveDirection.x * moveSpeed * airControlMultiplier, rb.velocity.y);
-                }
-            }
+            if (Mathf.Abs(lastHorizontalInput) > 0.01f)
+                rb.velocity = new Vector2(lastHorizontalInput * crouchForwardSpeed, rb.velocity.y);
             else
-            {
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
-            }
+                rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+        else if (animator.GetBool("IsRunning"))
+        {
+            rb.velocity = new Vector2(moveDirection.x * moveSpeed, rb.velocity.y);
+        }
+        else if (isGrounded)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
         }
     }
 
