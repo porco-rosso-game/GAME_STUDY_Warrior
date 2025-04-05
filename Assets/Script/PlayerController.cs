@@ -238,7 +238,12 @@ public class PlayerController : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
             Debug.Log("공격에 맞은 적: " + enemy.name);
-            // enemy에게 데미지를 주는 로직 추가
+            
+            // 공격 방향: 공격 포인트에서 적의 위치로 향하는 방향 계산
+            Vector2 knockbackDirection = (enemy.transform.position - attackPoint.position).normalized;
+            
+            // EnemyController 스크립트의 TakeDamage 함수에 공격 데미지와 knockback 방향을 전달
+            enemy.GetComponent<EnemyController>()?.TakeDamage(attackDamage, knockbackDirection);
         }
     }
 
