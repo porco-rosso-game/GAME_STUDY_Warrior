@@ -3,25 +3,24 @@ using UnityEngine.UI;
 
 public class PlayerHealthUI : MonoBehaviour
 {
-    public PlayerHealth playerHealth;   // 플레이어 체력 정보를 가진 스크립트 (Player 오브젝트에 붙은 PlayerHealth)
-    public Slider healthSlider;         // 플레이어 체력을 표시할 슬라이더
+    // 이전 PlayerHealth 대신 PlayerController를 참조합니다.
+    public PlayerController playerController;  
+    public Slider healthSlider;
 
     void Start()
     {
-        // 슬라이더의 최대값을 플레이어의 최대 체력으로 설정
-        if(playerHealth != null)
+        if(playerController != null)
         {
-            healthSlider.maxValue = playerHealth.maxHealth;
-            healthSlider.value = playerHealth.currentHealth;
+            healthSlider.maxValue = playerController.maxHealth;
+            healthSlider.value = playerController.currentHealth;
         }
     }
 
     void Update()
     {
-        // 매 프레임마다 슬라이더의 값 업데이트
-        if(playerHealth != null)
+        if(playerController != null)
         {
-            healthSlider.value = playerHealth.currentHealth;
+            healthSlider.value = playerController.currentHealth;
         }
     }
 }

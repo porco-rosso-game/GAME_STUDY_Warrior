@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 184250254398219164}
   - component: {fileID: 6717996265608798557}
   m_Layer: 7
-  m_Name: EnemyHealthDisplay
+  m_Name: PlayerHealthDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,6 @@ GameObject:
   - component: {fileID: 3969906169652264452}
   - component: {fileID: 6435676553851952891}
   - component: {fileID: 337016531137259847}
-  - component: {fileID: 4235740456205720989}
   - component: {fileID: 3958276030451898511}
   m_Layer: 7
   m_Name: Player
@@ -262,9 +261,9 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 3780594253242084176}
   - {fileID: 8360277092279121443}
   - {fileID: 8847400898301490855}
-  - {fileID: 3780594253242084176}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7513813183616905596
@@ -415,35 +414,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
+  jumpForce: 10
+  crouchForwardSpeed: 1
+  airControlMultiplier: 0.5
   attackRange: 1
-  attackDamage: 10
+  attackDamage: 5
   attackPoint: {fileID: 8360277092279121443}
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
-  jumpForce: 10
+  maxHealth: 100
+  currentHealth: 0
+  hurtDuration: 1
+  hurtKnockbackForce: 10
   groundCheck: {fileID: 8847400898301490855}
   groundCheckRadius: 0.3
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  crouchForwardSpeed: 1
-  fallThreshold: 0.5
-  airControlMultiplier: 0.5
---- !u!114 &4235740456205720989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5220235046025068779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c511713a7b5f5b4485e703d62afce19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
 --- !u!114 &3958276030451898511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7334e6f418965404eb1ea227e7b61a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: {fileID: 4235740456205720989}
+  playerHealth: {fileID: 0}
   healthSlider: {fileID: 3586362628448814436}
 --- !u!1 &5949048732277284331
 GameObject:
@@ -715,7 +703,7 @@ Transform:
   m_GameObject: {fileID: 7841077778785255226}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1333, y: 0, z: 0}
+  m_LocalPosition: {x: 0.109, y: -0.042, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

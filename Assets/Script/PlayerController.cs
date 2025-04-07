@@ -3,45 +3,46 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float moveSpeed = 5f;            // 이동 속도
+    public float jumpForce = 7f;            // 점프 힘
+    public float crouchForwardSpeed = 1f;   // 크로우시 전진 속도
+    public float airControlMultiplier = 0.5f; // 공중 이동 계수
+
+    [Header("Attack Settings")]
     public float attackRange = 1f;          // 공격 범위
     public int attackDamage = 10;           // 공격 데미지
-    public Transform attackPoint;           // 공격 위치 (플레이어 앞쪽에 배치)
-    public LayerMask enemyLayers;           // 적이 포함된 레이어
+    public Transform attackPoint;           // 공격 발생 위치
+    public LayerMask enemyLayers;           // 공격 대상 enemy 레이어
 
-    [Header("점프 관련 설정")]
-    public float jumpForce = 7f;
+    [Header("Health Settings")]
+    public int maxHealth = 100;             // 최대 체력
+    public int currentHealth;               // 현재 체력
+
+    [Header("Hurt Settings")]
+    public float hurtDuration = 0.5f;       // Hurt 애니메이션 지속 시간
+    public float hurtKnockbackForce = 5f;   // Hurt 시 knockback 힘
+    private bool isHurt = false;
+    private float hurtTimer = 0f;
+
+    private bool isDead = false;            // 사망 여부
+
+    [Header("Jump & Ground Check")]
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
-
-    [Header("Croush 관련 설정")]
-    public float crouchForwardSpeed = 1f;   // croush 상태에서 전진하는 속도
-
-    [Header("Fall 조건 (캐릭터 기준)")]
-    public float fallThreshold = 0.5f;      // 점프 후 최고점과 현재 높이 차이가 이 값 이상이면 Fall 전이
-
-    [Header("Air Control")]
-    public float airControlMultiplier = 0.5f; // 공중에서의 수평 이동 계수 (땅에서는 1)
-
     private bool isGrounded;
-    private bool wasGrounded = false;       // 이전 프레임의 바닥 접촉 상태
+    private bool wasGrounded = false;
+    private bool isJumping = false;
+    private float jumpStartY = 0f;
+    private float maxJumpY = 0f;
 
-    // 땅에 있을 때의 수평 입력 값 (공중에서는 마지막 입력 유지)
-    private float lastHorizontalInput = 0f;
-
+    // 내부 변수
     private Rigidbody2D rb;
     private Vector2 moveDirection;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-
-    // 초기 localScale (플립 시 사용)
     private Vector3 initialScale;
-
-    // 점프 관련 변수
-    private float jumpStartY = 0f; // 점프 시작 시의 높이 (월드 기준)
-    private float maxJumpY = 0f;   // 점프 후 최고 높이 (월드 기준)
-    private bool isJumping = false;
 
     void Start()
     {
@@ -51,30 +52,46 @@ public class PlayerController : MonoBehaviour
         initialScale = transform.localScale;
 
         if (rb == null)
-            Debug.LogWarning("No Rigidbody2D found! Please add one.");
+            Debug.LogWarning("No Rigidbody2D found!");
         if (animator == null)
-            Debug.LogWarning("No Animator found! Please add one.");
+            Debug.LogWarning("No Animator found!");
         if (spriteRenderer == null)
-            Debug.LogWarning("No SpriteRenderer found! Please add one.");
+            Debug.LogWarning("No SpriteRenderer found!");
+
+        currentHealth = maxHealth;
     }
 
-    // 모든 트리거를 리셋하는 함수
+    // 모든 트리거 리셋 (불필요한 전이 방지용)
     void ResetAllTriggers()
     {
         animator.ResetTrigger("JumpTrigger");
         animator.ResetTrigger("FallTrigger");
         animator.ResetTrigger("CroushTrigger");
         animator.ResetTrigger("Attack");
+        animator.ResetTrigger("DeathTrigger");
+        animator.ResetTrigger("HurtTrigger");
     }
 
     void Update()
     {
-        // 바닥 체크
+        if (isDead)
+            return;
+
+        // Hurt 상태라면 hurtDuration 동안 다른 동작 무시
+        if (isHurt)
+        {
+            hurtTimer += Time.deltaTime;
+            if (hurtTimer >= hurtDuration)
+                isHurt = false;
+            return;
+        }
+
+        // 지면 체크
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("verticalVelocity", rb.velocity.y);
 
-        // 점프 입력: 땅에 있을 때 스페이스바 입력 시 점프 시작
+        // 점프 입력
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             ResetAllTriggers();
@@ -83,62 +100,49 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             animator.SetTrigger("JumpTrigger");
-            Debug.Log("Jump triggered. jumpStartY = " + jumpStartY);
+            Debug.Log("Jump triggered.");
         }
 
-        // 공중에 있을 때 점프 상태이면 최고점 업데이트
         if (!isGrounded && isJumping)
         {
             maxJumpY = Mathf.Max(maxJumpY, transform.position.y);
         }
 
-        // Fall 전이 처리:
-        // 달리다가 ledge에서 떨어지는 경우
+        // Fall 처리
         if (!isGrounded && rb.velocity.y < 0f && wasGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
         {
             if (!Input.GetKey(KeyCode.Q))
             {
                 ResetAllTriggers();
-                Debug.Log("FallTrigger (running off ledge) called. rb.velocity.y = " + rb.velocity.y);
                 animator.SetTrigger("FallTrigger");
             }
         }
-        // 점프 후 낙하하는 경우
         else if (!isGrounded && isJumping && rb.velocity.y < 0f && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
         {
             float dropHeight = maxJumpY - transform.position.y;
-            if (dropHeight >= fallThreshold)
+            if (dropHeight >= 0.5f) // fallThreshold
             {
                 if (!Input.GetKey(KeyCode.Q))
                 {
                     ResetAllTriggers();
-                    Debug.Log("FallTrigger (jump fall) called. dropHeight = " + dropHeight);
                     animator.SetTrigger("FallTrigger");
                     isJumping = false;
                 }
             }
         }
 
-        // 착지 감지: 이전 프레임에 공중이었고, 현재 땅이면
+        // 착지 감지
         if (!wasGrounded && isGrounded)
         {
             ResetAllTriggers();
-            Debug.Log("Landing detected. current Y = " + transform.position.y);
             animator.SetTrigger("CroushTrigger");
             isJumping = false;
         }
         wasGrounded = isGrounded;
 
-        // 땅에 있을 때 수평 입력 업데이트
-        if (isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-        {
-            lastHorizontalInput = Input.GetAxis("Horizontal");
-        }
-
-        bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
+        // 이동 및 스프라이트 플립
         bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-
-        // 이동 입력 처리 및 좌우 반전 (공격이나 croush 상태에서는 moveDirection을 0으로 설정)
+        bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
         if (!isAttacking && !isCroush)
         {
             float moveX = Input.GetAxis("Horizontal");
@@ -155,7 +159,7 @@ public class PlayerController : MonoBehaviour
             moveDirection = Vector2.zero;
         }
 
-        // 공격 입력: Q 키
+        // 공격 입력 (예시: Q 키)
         if (!isAttacking && Input.GetKeyDown(KeyCode.Q))
         {
             ResetAllTriggers();
@@ -163,7 +167,7 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Attack");
         }
 
-        // 달리기 애니메이션 처리: 땅에 있고, 공격이나 croush 상태가 아닐 때
+        // 달리기 애니메이션 처리
         if (!isAttacking && !isCroush && isGrounded)
         {
             bool isRunningInput = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) ||
@@ -178,18 +182,18 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 땅에 있을 때의 처리
+        if (isDead)
+            return;
+
         if (isGrounded)
         {
             bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
             bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
 
-            // 1. 땅에서 공격 중일 때는 이동 불가
             if (isAttacking)
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
             }
-            // 2. 착지 후 croush 상태일 때는 crouchForwardSpeed만큼 살짝 이동 가능
             else if (isCroush)
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
@@ -198,66 +202,103 @@ public class PlayerController : MonoBehaviour
             else
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
-                if (Mathf.Approximately(inputX, 0f))
-                {
-                    rb.velocity = new Vector2(0, rb.velocity.y);
-                }
-                else
-                {
-                    rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
-                }
+                rb.velocity = Mathf.Approximately(inputX, 0f) ? 
+                              new Vector2(0, rb.velocity.y) : new Vector2(inputX * moveSpeed, rb.velocity.y);
             }
         }
         else
         {
-            // 공중에서는 공격 중이 아니면 airControlMultiplier를 적용하고,
-            // 입력이 없으면 Lerp를 통해 감속, 있을 경우 현재 방향으로 이동
             bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
             if (!isAttacking)
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
-                if (Mathf.Approximately(inputX, 0f))
-                {
-                    rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, 0.3f), rb.velocity.y);
-                }
-                else
-                {
-                    rb.velocity = new Vector2(moveDirection.x * moveSpeed * airControlMultiplier, rb.velocity.y);
-                }
-            }
-            else
-            {
-                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+                rb.velocity = Mathf.Approximately(inputX, 0f) ? 
+                              new Vector2(Mathf.Lerp(rb.velocity.x, 0, 0.3f), rb.velocity.y) :
+                              new Vector2(moveDirection.x * moveSpeed * airControlMultiplier, rb.velocity.y);
             }
         }
     }
 
+    // 플레이어가 데미지를 받을 때 호출되는 함수 (체력 관리 포함)
+    public void TakeDamage(int damage)
+    {
+        if (isDead)
+            return;
+
+        currentHealth -= damage;
+        Debug.Log("Player takes damage: " + damage + ", currentHealth = " + currentHealth);
+
+        if (currentHealth > 0)
+        {
+            // 예시: 공격자 방향을 (1,0)으로 가정 (필요에 따라 수정)
+            Vector2 knockbackDirection = new Vector2(1, 0);
+            Hurt(knockbackDirection);
+        }
+        else
+        {
+            Die();
+        }
+    }
+
+    // Hurt 함수: Hurt 애니메이션 트리거 실행, knockback 적용, hurtDuration 동안 다른 동작 무시
+    public void Hurt(Vector2 knockbackDirection)
+    {
+        if (!isHurt)
+        {
+            ResetAllTriggers();
+            animator.SetTrigger("HurtTrigger");
+            isHurt = true;
+            hurtTimer = 0f;
+            rb.AddForce(knockbackDirection * hurtKnockbackForce, ForceMode2D.Impulse);
+            Debug.Log("Player is hurt!");
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (isHurt)
+        {
+            hurtTimer += Time.deltaTime;
+            if (hurtTimer >= hurtDuration)
+            {
+                isHurt = false;
+            }
+        }
+    }
+
+    void Die()
+    {
+        ResetAllTriggers();
+        animator.SetTrigger("DeathTrigger");
+        isDead = true;
+        rb.velocity = Vector2.zero;
+        Debug.Log("Player has died.");
+    }
+    
+    // 플레이어 공격 애니메이션 이벤트로 호출될 함수
     public void PerformAttack()
     {
+        Debug.Log("Player performs attack!");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
-            Debug.Log("공격에 맞은 적: " + enemy.name);
-            
-            // 공격 방향: 공격 포인트에서 적의 위치로 향하는 방향 계산
             Vector2 knockbackDirection = (enemy.transform.position - attackPoint.position).normalized;
-            
-            // EnemyController 스크립트의 TakeDamage 함수에 공격 데미지와 knockback 방향을 전달
-            enemy.GetComponent<EnemyController>()?.TakeDamage(attackDamage, knockbackDirection);
+            EnemyController ec = enemy.GetComponent<EnemyController>();
+            if (ec != null)
+            {
+                ec.TakeDamage(attackDamage, knockbackDirection);
+                Debug.Log("Player attack hit " + enemy.name + " for " + attackDamage + " damage.");
+            }
         }
     }
 
+    // 디버그용: 공격 범위 시각화
     void OnDrawGizmosSelected()
     {
         if (attackPoint != null)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-        }
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
 }
