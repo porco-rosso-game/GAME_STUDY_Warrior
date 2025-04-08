@@ -14,6 +14,9 @@ public class ShadowFollower : MonoBehaviour
     public float minScale = 0.5f;            // 가장 높이 점프했을 때 그림자 크기
     public float minAlpha = 0.3f;            // 가장 높이 점프했을 때 그림자 투명도
 
+    [Header("그림자 기본 설정")]
+    public float baseScale = 1f;             // 그림자의 기본 크기 (바닥에 있을 때의 크기)
+
     private SpriteRenderer sr;
 
     void Start()
@@ -44,7 +47,8 @@ public class ShadowFollower : MonoBehaviour
             float t = height / maxJumpHeight;
 
             float alpha = Mathf.Lerp(1f, minAlpha, t);
-            float scale = Mathf.Lerp(1f, minScale, t);
+            // baseScale을 기본 크기로 사용하여, 점프 높이에 따라 minScale까지 보간
+            float scale = Mathf.Lerp(baseScale, minScale, t);
 
             sr.color = new Color(0f, 0f, 0f, alpha);
             transform.localScale = new Vector3(scale, scale, 1f);

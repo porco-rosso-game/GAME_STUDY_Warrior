@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 5844974574731791706}
   - component: {fileID: 1232284023851689040}
   - component: {fileID: 5591880839305946059}
+  - component: {fileID: 5086179773855175091}
   m_Layer: 5
   m_Name: EnemyHealthDisplay
   m_TagString: Untagged
@@ -213,6 +214,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5086179773855175091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2516202657751622315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1efb0894051f17a469c8098b129f8ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3093753389898412627
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +301,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4569904485232509083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5777313133607929744}
+  m_Layer: 6
+  m_Name: FlipPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5777313133607929744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4569904485232509083}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.329, y: -0.421, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8070828637599477917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6052211206250552077
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,6 +491,7 @@ Transform:
   - {fileID: 3929653031511589909}
   - {fileID: 1985473761485733927}
   - {fileID: 6496215863101973747}
+  - {fileID: 5777313133607929744}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5688661901801602650
@@ -615,7 +660,7 @@ MonoBehaviour:
   playerLayers:
     serializedVersion: 2
     m_Bits: 128
-  attackDamage: 10
+  attackDamage: 20
   player: {fileID: 0}
   attackDistanceThreshold: 5
   castDistanceThreshold: 5
@@ -625,6 +670,7 @@ MonoBehaviour:
   hurtDuration: 0.2
   animator: {fileID: 6515094552168279666}
   spellController: {fileID: 0}
+  spriteTransform: {fileID: 0}
 --- !u!114 &3177442061410988794
 MonoBehaviour:
   m_ObjectHideFlags: 0

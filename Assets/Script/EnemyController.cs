@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     public int attackDamage = 10;        // 공격 데미지
 
     [Header("AI Attack Settings")]
-    public Transform player;                      // 플레이어의 Transform (Inspector에 연결)
+    public Transform player;    // 플레이어의 Transform (Inspector에 연결)
     public float attackDistanceThreshold = 2f;    // 근접 공격 영역: 이 값 이하이면 공격
     public float castDistanceThreshold = 4f;      // 주문 캐스트 영역: 이 값 이상이면 cast 실행
     public float attackCooldown = 1.5f;
@@ -36,7 +36,11 @@ public class EnemyController : MonoBehaviour
 
     [Header("Animation and Spell Settings")]
     public Animator animator;                   // Enemy Animator (Idle, Attack, Cast, Hurt, Death 등)
-    public SpellController spellController;     // 독립된 Spell 오브젝트의 SpellController (Inspector에 연결)
+    public SpellController spellController;     // SpellController (Inspector에 연결)
+
+    [Header("Movement & Flip Settings")]
+    // 모든 움직임과 플립의 기준으로 사용할 오브젝트 (예를 들어, FlipPivot)
+    public Transform flipPivot;
 
     private Rigidbody2D rb;
     private bool isDead = false;
@@ -47,6 +51,12 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         if (animator == null)
             animator = GetComponent<Animator>();
+
+        // 만약 Inspector에서 flipPivot이 할당되지 않았다면 enemy의 부모(transform.parent)를 사용
+        if (flipPivot == null && transform.parent != null)
+        {
+            flipPivot = transform.parent;
+        }
     }
 
     void Update()
@@ -54,7 +64,27 @@ public class EnemyController : MonoBehaviour
         if (isDead)
             return;
 
-        // Hurt 상태 우선 처리: Hurt 애니메이션 진행 중이면 다른 동작을 건너뜁니다.
+        if (flipPivot == null)
+            return; // 기준 오브젝트가 없으면 더 이상 진행하지 않음
+
+        // ▶️ 플레이어와의 상대 위치에 따라 flipPivot의 localScale.x값을 변경하여 좌우 반전 처리
+        if (player != null)
+        {
+            Vector3 pivotScale = flipPivot.localScale;
+            if (player.position.x < flipPivot.position.x)
+            {
+                // 플레이어가 왼쪽에 있으면 flipPivot의 x값을 양수로 유지
+                pivotScale.x = Mathf.Abs(pivotScale.x);
+            }
+            else
+            {
+                // 플레이어가 오른쪽에 있으면 flipPivot의 x값을 음수로 반전
+                pivotScale.x = -Mathf.Abs(pivotScale.x);
+            }
+            flipPivot.localScale = pivotScale;
+        }
+
+        // ▶️ Hurt 상태 우선 처리 (Hurt 애니메이션 진행 중이면 다른 동작 건너뜀)
         if (isHurt)
         {
             hurtTimer += Time.deltaTime;
@@ -65,9 +95,9 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        float distance = Vector2.Distance(transform.position, player.position);
+        // ▶️ 모든 이동, 공격 관련 계산은 flipPivot의 위치를 기준으로 함
+        float distance = Vector2.Distance(flipPivot.position, player.position);
 
-        // 상태 결정: 가까우면 Attack, 멀면 Cast, 애매한 영역은 기본적으로 Attack으로 처리
         if (distance <= attackDistanceThreshold)
             currentState = EnemyState.Attack;
         else if (distance >= castDistanceThreshold)
@@ -75,7 +105,6 @@ public class EnemyController : MonoBehaviour
         else
             currentState = EnemyState.Attack;
 
-        // 만약 Attack 상태인데 Spell 진행 중이면 cast 취소
         if (currentState == EnemyState.Attack && isSpellInProgress)
         {
             if (spellController != null)
@@ -84,7 +113,6 @@ public class EnemyController : MonoBehaviour
             castTimer = 0f;
         }
 
-        // 상태별 타이머 업데이트 및 동작 실행
         if (currentState == EnemyState.Attack && !isSpellInProgress)
         {
             attackTimer += Time.deltaTime;
@@ -94,10 +122,9 @@ public class EnemyController : MonoBehaviour
                 attackTimer = 0f;
             }
         }
-        else
+        else if (currentState != EnemyState.Attack)
         {
-            if (currentState != EnemyState.Attack)
-                attackTimer = 0f;
+            attackTimer = 0f;
         }
 
         if (currentState == EnemyState.Cast && !isSpellInProgress)
@@ -115,7 +142,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // 플레이어가 enemy를 공격하여 데미지를 줄 때 호출됩니다.
+    // ▶️ 플레이어가 enemy를 공격하여 데미지를 줄 때 호출됨
     public void TakeDamage(int damage, Vector2 attackDirection)
     {
         if (isDead)
@@ -124,7 +151,6 @@ public class EnemyController : MonoBehaviour
         currentHealth -= damage;
         Debug.Log("Enemy health: " + currentHealth);
 
-        // Knockback 적용 (enemy에도 knockback 효과가 있다면)
         if (rb != null)
             rb.AddForce(attackDirection * knockbackForce, ForceMode2D.Impulse);
 
@@ -138,7 +164,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // Hurt 상태로 전환: Hurt 애니메이션 실행, hurtDuration 동안 다른 동작을 막습니다.
+    // ▶️ Hurt 상태 전환: Hurt 애니메이션 실행 후 잠시 다른 동작 차단
     void Hurt()
     {
         if (animator != null)
@@ -183,7 +209,7 @@ public class EnemyController : MonoBehaviour
             animator.SetTrigger("AttackTrigger");
         }
         Debug.Log("Enemy performs attack");
-        // 데미지 적용은 아래 DealAttackDamage()에서 Animation Event를 통해 처리됩니다.
+        // Attack 데미지 처리는 Animation Event를 통해 DealAttackDamage()에서 실행됩니다.
     }
 
     public void CastSpell()
@@ -202,13 +228,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // SpellController에서 Spell 애니메이션 종료 시 호출하여 플래그를 리셋합니다.
+    // ▶️ Spell 애니메이션 종료 후 호출되어 진행 중 플래그를 해제
     public void OnSpellAnimationComplete()
     {
         isSpellInProgress = false;
     }
 
-    // 이 함수는 Attack 애니메이션 클립의 타격 시점에 Animation Event로 호출되어, 플레이어에게 데미지를 적용합니다.
+    // ▶️ Attack 애니메이션 타격 시점에 Animation Event로 호출되어 플레이어에게 데미지 적용
     public void DealAttackDamage()
     {
         Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, playerLayers);
@@ -217,7 +243,8 @@ public class EnemyController : MonoBehaviour
             PlayerController pc = hitPlayer.GetComponent<PlayerController>();
             if (pc != null)
             {
-                Vector2 knockbackDirection = (hitPlayer.transform.position - transform.position).normalized;
+                // knockback의 기준으로 flipPivot의 위치를 사용
+                Vector2 knockbackDirection = (hitPlayer.transform.position - flipPivot.position).normalized;
                 pc.TakeDamage(attackDamage);
                 Debug.Log("Attack hit! Damage applied: " + attackDamage);
             }
