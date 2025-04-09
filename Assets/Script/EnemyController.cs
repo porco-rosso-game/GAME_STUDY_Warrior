@@ -3,7 +3,7 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    public enum EnemyState { Idle, Attack, Cast }
+    public enum EnemyState { Idle, Walk, Attack, Cast }
     public EnemyState currentState = EnemyState.Idle;
 
     [Header("Health Settings")]
@@ -17,154 +17,180 @@ public class EnemyController : MonoBehaviour
     public LayerMask playerLayers;       // 플레이어가 포함된 레이어 (예: "Player")
     public int attackDamage = 10;        // 공격 데미지
 
-    [Header("AI Attack Settings")]
-    public Transform player;    // 플레이어의 Transform (Inspector에 연결)
-    public float attackDistanceThreshold = 2f;    // 근접 공격 영역: 이 값 이하이면 공격
-    public float castDistanceThreshold = 4f;      // 주문 캐스트 영역: 이 값 이상이면 cast 실행
+    [Header("AI Settings")]
+    public Transform player;           // 플레이어의 Transform (Inspector에 연결)
     public float attackCooldown = 1.5f;
     public float castCooldown = 3f;  
 
     private float attackTimer = 0f;
     private float castTimer = 0f;
     
-    public bool isSpellInProgress = false; // Spell 애니메이션 진행 여부
+    [Header("Movement Settings")]
+    public float walkSpeed = 2f;       // Walk 상태일 때 이동 속도
+
+    [Header("Attack Range Settings")]
+    public float attackMinDistance = 0f;    // 공격 범위 최소값
+    public float attackMaxDistance = 2f;    // 공격 범위 최대값
+
+    [Header("Cast Range Settings")]
+    public float castMinDistance = 4f;      // 주문 시전 범위 최소값
+    public float castMaxDistance = 10f;     // 주문 시전 범위 최대값
 
     [Header("Hurt Settings")]
-    public float hurtDuration = 0.5f; // Hurt 애니메이션 지속 시간
+    public float hurtDuration = 0.5f;       // Hurt 애니메이션 지속 시간
     private bool isHurt = false;
     private float hurtTimer = 0f;
 
     [Header("Animation and Spell Settings")]
-    public Animator animator;                   // Enemy Animator (Idle, Attack, Cast, Hurt, Death 등)
-    public SpellController spellController;     // SpellController (Inspector에 연결)
+    public Animator animator;               // Enemy Animator (애니메이션 실행)
+    public SpellController spellController; // SpellController (Inspector에 연결)
 
-    [Header("Movement & Flip Settings")]
-    // 모든 움직임과 플립의 기준으로 사용할 오브젝트 (예를 들어, FlipPivot)
+    // Enemy 좌우 회전 기준 (플립 Pivot; 할당되지 않으면 transform 사용)
     public Transform flipPivot;
 
     private Rigidbody2D rb;
     private bool isDead = false;
+
+    // Spell 진행 여부 플래그
+    private bool isSpellInProgress = false;
 
     void Start()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         if (animator == null)
-            animator = GetComponent<Animator>();
+            animator = GetComponentInChildren<Animator>(); // Animator는 자식에 있을 수 있음
 
-        // 만약 Inspector에서 flipPivot이 할당되지 않았다면 enemy의 부모(transform.parent)를 사용
-        if (flipPivot == null && transform.parent != null)
-        {
-            flipPivot = transform.parent;
-        }
+        if (flipPivot == null)
+            Debug.LogWarning("FlipPivot is not assigned. Please assign the parent pivot object.");
     }
 
     void Update()
     {
         if (isDead)
             return;
-
-        if (flipPivot == null)
-            return; // 기준 오브젝트가 없으면 더 이상 진행하지 않음
-
-        // ▶️ 플레이어와의 상대 위치에 따라 flipPivot의 localScale.x값을 변경하여 좌우 반전 처리
-        if (player != null)
+        if (flipPivot == null || player == null)
+            return;
+        
+        // ★ 플레이어가 죽었는지 확인 (플레이어의 PlayerController의 isDead가 public이어야 함)
+        PlayerController pc = player.GetComponent<PlayerController>();
+        if (pc != null && pc.isDead)
         {
-            Vector3 pivotScale = flipPivot.localScale;
-            if (player.position.x < flipPivot.position.x)
-            {
-                // 플레이어가 왼쪽에 있으면 flipPivot의 x값을 양수로 유지
-                pivotScale.x = Mathf.Abs(pivotScale.x);
-            }
-            else
-            {
-                // 플레이어가 오른쪽에 있으면 flipPivot의 x값을 음수로 반전
-                pivotScale.x = -Mathf.Abs(pivotScale.x);
-            }
-            flipPivot.localScale = pivotScale;
+            rb.velocity = Vector2.zero;
+            animator.Play("Idle");
+            currentState = EnemyState.Idle;
+            attackTimer = 0f;
+            castTimer = 0f;
+            return;
         }
+        
+        // ── 부모(flipPivot)의 localScale 업데이트 ──
+        Vector3 pivotScale = flipPivot.localScale;
+        if (player.position.x < flipPivot.position.x)
+            pivotScale.x = Mathf.Abs(pivotScale.x);
+        else
+            pivotScale.x = -Mathf.Abs(pivotScale.x);
+        flipPivot.localScale = pivotScale;
+        // ─────────────────────────────────────────────
 
-        // ▶️ Hurt 상태 우선 처리 (Hurt 애니메이션 진행 중이면 다른 동작 건너뜀)
+        // ── 추가: enemy(자기 자신의 transform)도 항상 플레이어를 바라보도록 업데이트 ──
+        Vector3 selfScale = transform.localScale;
+        if (player.position.x < transform.position.x)
+            selfScale.x = Mathf.Abs(selfScale.x);
+        else
+            selfScale.x = -Mathf.Abs(selfScale.x);
+        transform.localScale = selfScale;
+        // ─────────────────────────────────────────────
+
+        // ▶️ Hurt 처리
         if (isHurt)
         {
             hurtTimer += Time.deltaTime;
             if (hurtTimer >= hurtDuration)
-            {
                 isHurt = false;
-            }
             return;
         }
 
-        // ▶️ 모든 이동, 공격 관련 계산은 flipPivot의 위치를 기준으로 함
+        // ▶️ 플레이어와의 거리 계산 (flipPivot 기준)
         float distance = Vector2.Distance(flipPivot.position, player.position);
 
-        if (distance <= attackDistanceThreshold)
+        // ▶️ 상태 결정:
+        if (distance >= attackMinDistance && distance <= attackMaxDistance)
             currentState = EnemyState.Attack;
-        else if (distance >= castDistanceThreshold)
+        else if (distance >= castMinDistance && distance <= castMaxDistance)
             currentState = EnemyState.Cast;
         else
-            currentState = EnemyState.Attack;
+            currentState = EnemyState.Walk;
 
-        if (currentState == EnemyState.Attack && isSpellInProgress)
-        {
-            if (spellController != null)
-                spellController.CancelSpell();
-            isSpellInProgress = false;
-            castTimer = 0f;
-        }
+        // ▶️ Animator의 Walk 애니메이션 제어
+        animator.SetBool("IsWalking", currentState == EnemyState.Walk);
 
-        if (currentState == EnemyState.Attack && !isSpellInProgress)
+        // ▶️ 상태별 행동 처리
+        switch (currentState)
         {
-            attackTimer += Time.deltaTime;
-            if (attackTimer >= attackCooldown)
-            {
-                PerformAttack();
-                attackTimer = 0f;
-            }
-        }
-        else if (currentState != EnemyState.Attack)
-        {
-            attackTimer = 0f;
-        }
-
-        if (currentState == EnemyState.Cast && !isSpellInProgress)
-        {
-            castTimer += Time.deltaTime;
-            if (castTimer >= castCooldown)
-            {
-                CastSpell();
-                castTimer = 0f;
-            }
-        }
-        else if (currentState != EnemyState.Cast)
-        {
-            castTimer = 0f;
+            case EnemyState.Walk:
+                {
+                    int direction = player.position.x > flipPivot.position.x ? 1 : -1;
+                    rb.velocity = new Vector2(walkSpeed * direction, rb.velocity.y);
+                    attackTimer = 0f;
+                    castTimer = 0f;
+                    break;
+                }
+            case EnemyState.Attack:
+                {
+                    rb.velocity = Vector2.zero;
+                    if (isSpellInProgress && spellController != null)
+                    {
+                        spellController.CancelSpell();
+                        isSpellInProgress = false;
+                        castTimer = 0f;
+                    }
+                    attackTimer += Time.deltaTime;
+                    if (attackTimer >= attackCooldown)
+                    {
+                        PerformAttack();
+                        attackTimer = 0f;
+                    }
+                    break;
+                }
+            case EnemyState.Cast:
+                {
+                    rb.velocity = Vector2.zero;
+                    attackTimer = 0f;
+                    if (!isSpellInProgress)
+                    {
+                        castTimer += Time.deltaTime;
+                        if (castTimer >= castCooldown)
+                        {
+                            CastSpell();
+                            castTimer = 0f;
+                        }
+                    }
+                    break;
+                }
+            default:
+                {
+                    rb.velocity = Vector2.zero;
+                    animator.SetBool("IsWalking", false);
+                    break;
+                }
         }
     }
 
-    // ▶️ 플레이어가 enemy를 공격하여 데미지를 줄 때 호출됨
     public void TakeDamage(int damage, Vector2 attackDirection)
     {
         if (isDead)
             return;
-
         currentHealth -= damage;
         Debug.Log("Enemy health: " + currentHealth);
-
         if (rb != null)
             rb.AddForce(attackDirection * knockbackForce, ForceMode2D.Impulse);
-
         if (currentHealth > 0)
-        {
             Hurt();
-        }
         else
-        {
             Die();
-        }
     }
 
-    // ▶️ Hurt 상태 전환: Hurt 애니메이션 실행 후 잠시 다른 동작 차단
     void Hurt()
     {
         if (animator != null)
@@ -209,7 +235,7 @@ public class EnemyController : MonoBehaviour
             animator.SetTrigger("AttackTrigger");
         }
         Debug.Log("Enemy performs attack");
-        // Attack 데미지 처리는 Animation Event를 통해 DealAttackDamage()에서 실행됩니다.
+        // Attack 데미지는 Attack 애니메이션의 Animation Event를 통해 DealAttackDamage()에서 적용
     }
 
     public void CastSpell()
@@ -228,13 +254,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // ▶️ Spell 애니메이션 종료 후 호출되어 진행 중 플래그를 해제
+    // Spell 애니메이션 마지막에 Animation Event로 호출되어 Spell 플래그 해제
     public void OnSpellAnimationComplete()
     {
         isSpellInProgress = false;
     }
 
-    // ▶️ Attack 애니메이션 타격 시점에 Animation Event로 호출되어 플레이어에게 데미지 적용
+    // Attack 애니메이션 중 Animation Event로 호출되어 데미지 적용
     public void DealAttackDamage()
     {
         Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, playerLayers);
@@ -243,7 +269,6 @@ public class EnemyController : MonoBehaviour
             PlayerController pc = hitPlayer.GetComponent<PlayerController>();
             if (pc != null)
             {
-                // knockback의 기준으로 flipPivot의 위치를 사용
                 Vector2 knockbackDirection = (hitPlayer.transform.position - flipPivot.position).normalized;
                 pc.TakeDamage(attackDamage);
                 Debug.Log("Attack hit! Damage applied: " + attackDamage);
