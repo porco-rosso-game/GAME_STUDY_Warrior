@@ -46,17 +46,16 @@ public class PlayerController : MonoBehaviour
     private Vector3 initialScale;
 
     // Dash 관련 변수
-    // ★ Dash 상태(및 dash-attack) 시에는 공격을 회피하는 용도로 사용합니다.
-    public bool isDashing = false;  // private -> public로 변경하여 외부에서 참조할 수 있음
+    public bool isDashing = false;
     private float dashStartTime = 0f;
-    public float dashDuration = 0.2f;         // Dash 상태 지속 시간 (초)
+    public float dashDuration = 0.2f;         // Dash 상태 지속 시간
     private int dashDirection = 0;            // -1: 왼쪽, 1: 오른쪽
     public float doubleTapThreshold = 0.3f;   // 더블탭 간격 최대 시간
     private float lastLeftKeyTapTime = -1f;
     private float lastRightKeyTapTime = -1f;
 
     [Header("Dash Attack Settings")]
-    public float dashAttackPushForce = 10f;   // Dash-Attack 시 플레이어가 앞으로 밀리는 힘
+    public float dashAttackPushForce = 10f;   // Dash-Attack 시 앞으로 밀리는 힘
     public int dashAttackDamage = 20;         // Dash-Attack 공격 데미지
 
     void Start()
@@ -66,17 +65,13 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         initialScale = transform.localScale;
 
-        if (rb == null)
-            Debug.LogWarning("No Rigidbody2D found!");
-        if (animator == null)
-            Debug.LogWarning("No Animator found!");
-        if (spriteRenderer == null)
-            Debug.LogWarning("No SpriteRenderer found!");
+        if (rb == null) Debug.LogWarning("No Rigidbody2D found!");
+        if (animator == null) Debug.LogWarning("No Animator found!");
+        if (spriteRenderer == null) Debug.LogWarning("No SpriteRenderer found!");
 
         currentHealth = maxHealth;
     }
 
-    // 모든 트리거 리셋 (불필요한 전이 방지)
     void ResetAllTriggers()
     {
         animator.ResetTrigger("JumpTrigger");
@@ -89,7 +84,6 @@ public class PlayerController : MonoBehaviour
         animator.ResetTrigger("DashAttack");
     }
 
-    // Dash 시작 함수
     void StartDash(int direction)
     {
         isDashing = true;
@@ -102,11 +96,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 플레이어가 죽은 상태이면 추가 입력이나 업데이트를 중단 (Death 애니메이션이 유지됨)
-        if (isDead)
-        {
-            return;
-        }
+        if (isDead) return;
 
         if (isHurt)
         {
@@ -116,25 +106,21 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // 더블탭 Dash 검출 (좌우 이동 키)
+        // 더블탭 Dash 검출
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (Time.time - lastRightKeyTapTime <= doubleTapThreshold && !isDashing)
-            {
                 StartDash(1);
-            }
             lastRightKeyTapTime = Time.time;
         }
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (Time.time - lastLeftKeyTapTime <= doubleTapThreshold && !isDashing)
-            {
                 StartDash(-1);
-            }
             lastLeftKeyTapTime = Time.time;
         }
 
-        // Dash 상태에서 공격 입력 (Q 키) -> Dash-Attack 실행
+        // Dash-Attack 입력 (Dash 상태 우선)
         if (isDashing && Input.GetKeyDown(KeyCode.Q))
         {
             ResetAllTriggers();
@@ -144,12 +130,26 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // 지면 체크 및 애니메이터에 값 전달
+        // 현재 애니메이터 상태 확인
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        bool isAttackingState = state.IsName("Attack") || state.IsName("DashAttack");
+
+        // 지면 체크 및 애니메이터 파라미터 업데이트
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("verticalVelocity", rb.velocity.y);
 
-        // 점프 입력 처리 (지면에 있을 때)
+        // 일반 공격 입력 처리 (가장 우선)
+        if (!isAttackingState && !isDashing && Input.GetKeyDown(KeyCode.Q))
+        {
+            ResetAllTriggers();
+            animator.SetBool("IsRunning", false);
+            animator.SetTrigger("Attack");
+            Debug.Log("Attack triggered.");
+            return;
+        }
+
+        // 점프 입력 처리
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             ResetAllTriggers();
@@ -165,8 +165,12 @@ public class PlayerController : MonoBehaviour
             maxJumpY = Mathf.Max(maxJumpY, transform.position.y);
         }
 
-        // Fall 처리: 공중에 있고, y 속도가 음수이면 Fall 애니메이션을 호출
-        if (!isGrounded && rb.velocity.y < 0f && !animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
+        // Fall 처리 (공중에서 하강 중일 때, 공격/대시 중이 아니면)
+        if (!isGrounded 
+            && rb.velocity.y < 0f 
+            && !state.IsName("Fall") 
+            && !isAttackingState 
+            && !isDashing)
         {
             ResetAllTriggers();
             animator.SetTrigger("FallTrigger");
@@ -174,7 +178,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Fall triggered.");
         }
 
-        // 착지 감지: 지면에 도착하면 CroushTrigger 실행
+        // 착지 감지 -> Croush
         if (!wasGrounded && isGrounded)
         {
             ResetAllTriggers();
@@ -183,30 +187,20 @@ public class PlayerController : MonoBehaviour
         }
         wasGrounded = isGrounded;
 
-        // 이동 및 스프라이트 플립 처리 (Dash 상태가 아닐 때)
-        bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-        bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
-        if (!isAttacking && !isCroush && !isDashing)
+        // 이동 방향과 스프라이트 플립 (공격/크로우시/대시가 아닐 때)
+        bool isCroush = state.IsName("Croush");
+        if (!isAttackingState && !isCroush && !isDashing)
         {
             float moveX = Input.GetAxis("Horizontal");
-            float moveY = Input.GetAxis("Vertical");
-            moveDirection = new Vector2(moveX, moveY).normalized;
+            moveDirection = new Vector2(moveX, Input.GetAxis("Vertical")).normalized;
             if (moveX < 0)
                 transform.localScale = new Vector3(-Mathf.Abs(initialScale.x), initialScale.y, initialScale.z);
             else if (moveX > 0)
                 transform.localScale = new Vector3(Mathf.Abs(initialScale.x), initialScale.y, initialScale.z);
         }
 
-        // 일반 공격 입력 (Dash 상태가 아닐 때)
-        if (!isAttacking && !isDashing && Input.GetKeyDown(KeyCode.Q))
-        {
-            ResetAllTriggers();
-            animator.SetBool("IsRunning", false);
-            animator.SetTrigger("Attack");
-        }
-
         // 달리기 애니메이션 처리
-        if (!isAttacking && !isCroush && isGrounded && !isDashing)
+        if (!isAttackingState && !isCroush && isGrounded && !isDashing)
         {
             bool isRunningInput = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) ||
                                    Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A);
@@ -220,8 +214,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isDead)
-            return;
+        if (isDead) return;
 
         if (isDashing)
         {
@@ -233,14 +226,14 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded)
         {
-            bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-            bool isCroush = animator.GetCurrentAnimatorStateInfo(0).IsName("Croush");
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            bool isAttackingState = state.IsName("Attack");
 
-            if (isAttacking)
+            if (isAttackingState)
             {
                 rb.velocity = new Vector2(0, rb.velocity.y);
             }
-            else if (isCroush)
+            else if (state.IsName("Croush"))
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
                 rb.velocity = new Vector2(inputX * crouchForwardSpeed, rb.velocity.y);
@@ -248,36 +241,35 @@ public class PlayerController : MonoBehaviour
             else
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
-                rb.velocity = Mathf.Approximately(inputX, 0f) ?
-                              new Vector2(0, rb.velocity.y) : new Vector2(inputX * moveSpeed, rb.velocity.y);
+                rb.velocity = Mathf.Approximately(inputX, 0f)
+                    ? new Vector2(0, rb.velocity.y)
+                    : new Vector2(inputX * moveSpeed, rb.velocity.y);
             }
         }
         else
         {
-            bool isAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-            if (!isAttacking)
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            bool isAttackingState = state.IsName("Attack");
+
+            if (!isAttackingState)
             {
                 float inputX = Input.GetAxisRaw("Horizontal");
-                rb.velocity = Mathf.Approximately(inputX, 0f) ?
-                              new Vector2(Mathf.Lerp(rb.velocity.x, 0, 0.3f), rb.velocity.y) :
-                              new Vector2(moveDirection.x * moveSpeed * airControlMultiplier, rb.velocity.y);
+                rb.velocity = Mathf.Approximately(inputX, 0f)
+                    ? new Vector2(Mathf.Lerp(rb.velocity.x, 0, 0.3f), rb.velocity.y)
+                    : new Vector2(moveDirection.x * moveSpeed * airControlMultiplier, rb.velocity.y);
             }
         }
     }
 
+    // 이하 TakeDamage, Hurt, Die, PerformAttack, PerformDashAttack 메서드는 기존과 동일합니다.
     public void TakeDamage(int damage)
     {
-        // 플레이어의 dash 또는 dash-attack 상태에서는 적의 공격 영향을 받지 않음
-        if (isDead || isDashing)
-            return;
+        if (isDead || isDashing) return;
 
         currentHealth -= damage;
-        Debug.Log("Player takes damage: " + damage + ", currentHealth = " + currentHealth);
-
         if (currentHealth > 0)
         {
-            Vector2 knockbackDirection = new Vector2(1, 0);
-            Hurt(knockbackDirection);
+            Hurt(new Vector2(1, 0));
         }
         else
         {
@@ -294,7 +286,6 @@ public class PlayerController : MonoBehaviour
             isHurt = true;
             hurtTimer = 0f;
             rb.AddForce(knockbackDirection * hurtKnockbackForce, ForceMode2D.Impulse);
-            Debug.Log("Player is hurt!");
         }
     }
 
@@ -314,41 +305,31 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("DeathTrigger");
         isDead = true;
         rb.velocity = Vector2.zero;
-        Debug.Log("Player has died.");
-        // 사망 후 스크립트를 완전히 비활성화하여 추가 동작이 발생하지 않도록 함
         this.enabled = false;
     }
-    
+
     public void PerformAttack()
     {
-        Debug.Log("Player performs attack!");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
-            Vector2 knockbackDirection = (enemy.transform.position - attackPoint.position).normalized;
-            EnemyController ec = enemy.GetComponent<EnemyController>();
+            var ec = enemy.GetComponent<EnemyController>();
             if (ec != null)
-            {
-                ec.TakeDamage(attackDamage, knockbackDirection);
-                Debug.Log("Player attack hit " + enemy.name + " for " + attackDamage + " damage.");
-            }
+                ec.TakeDamage(attackDamage, (enemy.transform.position - attackPoint.position).normalized);
         }
     }
-    
+
     public void PerformDashAttack()
     {
-        int direction = transform.localScale.x > 0 ? 1 : -1;
-        rb.velocity = new Vector2(dashAttackPushForce * direction, rb.velocity.y);
-        
+        int dir = transform.localScale.x > 0 ? 1 : -1;
+        rb.velocity = new Vector2(dashAttackPushForce * dir, rb.velocity.y);
+
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
         foreach (Collider2D enemy in hitEnemies)
         {
-            EnemyController ec = enemy.GetComponent<EnemyController>();
+            var ec = enemy.GetComponent<EnemyController>();
             if (ec != null)
-            {
                 ec.TakeDamage(dashAttackDamage, (enemy.transform.position - attackPoint.position).normalized);
-                Debug.Log("Dash Attack hit " + enemy.name + " for " + dashAttackDamage + " damage.");
-            }
         }
     }
 }
