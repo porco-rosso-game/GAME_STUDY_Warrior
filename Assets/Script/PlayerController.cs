@@ -301,11 +301,20 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        ResetAllTriggers();
-        animator.SetTrigger("DeathTrigger");
-        isDead = true;
-        rb.velocity = Vector2.zero;
-        this.enabled = false;
+    ResetAllTriggers();
+    animator.SetTrigger("DeathTrigger");
+    isDead = true;
+    rb.velocity = Vector2.zero;
+
+    // ★ GameOver 화면 표시 호출
+    var ui = FindObjectOfType<GameOverUI>();
+    if (ui != null)
+        ui.ShowGameOver();
+    else
+        Debug.LogWarning("GameOverUI가 씬에 없습니다.");
+
+    // 죽은 뒤 PlayerController 컴포넌트를 비활성화
+    this.enabled = false;
     }
 
     public void PerformAttack()
