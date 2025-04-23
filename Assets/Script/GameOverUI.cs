@@ -2,66 +2,60 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 플레이어가 죽었을 때 호출하면,
+/// 설정된 Game Over 이미지가 서서히 페이드 인됩니다.
+/// </summary>
 public class GameOverUI : MonoBehaviour
 {
-    [Header("UI Elements")]
-    [Tooltip("CanvasGroup on the full-screen dark panel")]
-    public CanvasGroup darkPanel;
-    [Tooltip("Game Over text object (initially inactive)")]
-    public GameObject gameOverText;
+    [Header("Game Over Image")]
+    [Tooltip("게임오버 상태를 표시할 Image 컴포넌트")] 
+    public Image gameOverImage;
 
-    [Header("Fade Settings")]
-    [Tooltip("Target alpha for the dark overlay (0 = transparent, 1 = opaque)")]
-    [Range(0f, 1f)]
-    public float targetAlpha = 0.5f;
-    [Tooltip("Duration of the fade in seconds")]
+    [Header("Fade Duration")]
+    [Tooltip("이미지가 완전히 보이기까지 걸리는 시간(초)")]
     public float fadeDuration = 1f;
 
-    void Start()
+    private void Awake()
     {
-        // 초기 상태: 투명 패널 + 텍스트 비활성화
-        if (darkPanel != null)
-            darkPanel.alpha = 0f;
-        if (gameOverText != null)
-            gameOverText.SetActive(false);
+        // 초기 상태: 이미지 숨기고 투명도 0
+        if (gameOverImage != null)
+        {
+            Color c = gameOverImage.color;
+            gameOverImage.color = new Color(c.r, c.g, c.b, 0f);
+            gameOverImage.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
-    /// 외부에서 호출하여 게임 오버 UI를 표시합니다.
+    /// 게임오버 시 호출하세요.
     /// </summary>
     public void ShowGameOver()
     {
-        if (darkPanel == null || gameOverText == null)
+        if (gameOverImage == null)
         {
-            Debug.LogWarning("GameOverUI: Dark panel or GameOverText is not assigned.");
+            Debug.LogWarning("GameOverUI: gameOverImage가 할당되지 않았습니다.");
             return;
         }
 
-        // 패널 페이드 인
-        StartCoroutine(FadeInPanel());
+        gameOverImage.gameObject.SetActive(true);
+        StartCoroutine(FadeInImage());
     }
 
-    private IEnumerator FadeInPanel()
+    private IEnumerator FadeInImage()
     {
         float elapsed = 0f;
-        float startAlpha = darkPanel.alpha;
-
-        // 페이드 중 텍스트 비활성
-        gameOverText.SetActive(false);
+        Color baseColor = gameOverImage.color;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            // 선형 보간으로 알파 변경
-            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration);
-            darkPanel.alpha = alpha;
+            float alpha = Mathf.Clamp01(elapsed / fadeDuration);
+            gameOverImage.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
             yield return null;
         }
 
-        // 최종 알파 보정
-        darkPanel.alpha = targetAlpha;
-
-        // Game Over 텍스트 활성화
-        gameOverText.SetActive(true);
+        // 보정: 완전 불투명하게 설정
+        gameOverImage.color = new Color(baseColor.r, baseColor.g, baseColor.b, 1f);
     }
 }
