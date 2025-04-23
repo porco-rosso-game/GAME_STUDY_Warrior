@@ -1,0 +1,121 @@
+fileFormatVersion: 2
+guid: ef86230843a6bc34ca27bf3025681484
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Birp001
+    100002: Birp00101
+    100004: Birp00102
+    100006: Birp00103
+    100008: Birp00104
+    100010: Birp00105
+    100012: Birp00106
+    100014: Birp00107
+    100016: Birp00108
+    100018: Birp00109
+    100020: Birp00111
+    100022: Birp00113
+    100024: Birp00114
+    100026: Birp00115
+    100028: Birp00116
+    100030: Birp00117
+    100032: Birp00119
+    100034: Birp00121
+    100036: Birp00122
+    100038: Birp00125
+    100040: Birp00126
+    100042: Birp00127
+    100044: Birp00128
+    100046: Birp00130
+    100048: Birp00131
+    100050: Birp00132
+    100052: Birp00133
+    100054: Particle View 001
+    100056: polySurface3
+    100058: //RootNode
+    400000: Birp001
+    400002: Birp00101
+    400004: Birp00102
+    400006: Birp00103
+    400008: Birp00104
+    400010: Birp00105
+    400012: Birp00106
+    400014: Birp00107
+    400016: Birp00108
+    400018: Birp00109
+    400020: Birp00111
+    400022: Birp00113
+    400024: Birp00114
+    400026: Birp00115
+    400028: Birp00116
+    400030: Birp00117
+    400032: Birp00119
+    400034: Birp00121
+    400036: Birp00122
+    400038: Birp00125
+    400040: Birp00126
+    400042: Birp00127
+    400044: Birp00128
+    400046: Birp00130
+    400048: Birp00131
+    400050: Birp00132
+    400052: Birp00133
+    400054: Particle View 001
+    400056: polySurface3
+    400058: //RootNode
+    4300000: polySurface3
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: polySurface3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 

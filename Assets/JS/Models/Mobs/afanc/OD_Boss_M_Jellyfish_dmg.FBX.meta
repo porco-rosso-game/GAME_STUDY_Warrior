@@ -1,0 +1,308 @@
+fileFormatVersion: 2
+guid: 8bc60918b469dd043974b50bf643f9b4
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Circle005
+    100002: Circle006
+    100004: Circle007
+    100006: Circle008
+    100008: Circle009
+    100010: Circle010
+    100012: Circle011
+    100014: Circle012
+    100016: Circle013
+    100018: Circle014
+    100020: Circle015
+    100022: Circle016
+    100024: Circle017
+    100026: Dummy001
+    100028: Dummy002
+    100030: Dummy003
+    100032: Dummy004
+    100034: Dummy025
+    100036: Dummy026
+    100038: Dummy027
+    100040: Dummy028
+    100042: Line001
+    100044: Line002
+    100046: Line004
+    100048: Line005
+    100050: //RootNode
+    100052: Dummy005
+    100054: Dummy006
+    100056: Dummy007
+    100058: Dummy008
+    100060: Dummy009
+    100062: Dummy010
+    100064: Dummy011
+    100066: Dummy012
+    100068: Dummy013
+    100070: Dummy014
+    100072: Dummy015
+    100074: Dummy016
+    100076: Dummy017
+    100078: Dummy018
+    100080: Dummy019
+    100082: Dummy020
+    100084: Dummy021
+    100086: Dummy022
+    100088: Dummy023
+    100090: Dummy024
+    100092: Dummy029
+    100094: IK Chain001
+    100096: IK Chain002
+    100098: IK Chain003
+    100100: IK Chain004
+    100102: Point001
+    100104: Point002
+    100106: Point003
+    100108: Point004
+    100110: Point005
+    100112: Point006
+    100114: Point007
+    100116: Point008
+    100118: Point009
+    100120: Point010
+    100122: Point011
+    100124: Point012
+    100126: Particle View 001
+    100128: Particle View 001 1
+    100130: Particle View 001 2
+    100132: Particle View 001 3
+    100134: Particle View 001 4
+    100136: Particle View 001 5
+    100138: Particle View 001 6
+    100140: Particle View 002
+    100142: group1_pCube36
+    100144: Object001
+    100146: Object002
+    100148: Object003
+    100150: pCube1
+    400000: Circle005
+    400002: Circle006
+    400004: Circle007
+    400006: Circle008
+    400008: Circle009
+    400010: Circle010
+    400012: Circle011
+    400014: Circle012
+    400016: Circle013
+    400018: Circle014
+    400020: Circle015
+    400022: Circle016
+    400024: Circle017
+    400026: Dummy001
+    400028: Dummy002
+    400030: Dummy003
+    400032: Dummy004
+    400034: Dummy025
+    400036: Dummy026
+    400038: Dummy027
+    400040: Dummy028
+    400042: Line001
+    400044: Line002
+    400046: Line004
+    400048: Line005
+    400050: //RootNode
+    400052: Dummy005
+    400054: Dummy006
+    400056: Dummy007
+    400058: Dummy008
+    400060: Dummy009
+    400062: Dummy010
+    400064: Dummy011
+    400066: Dummy012
+    400068: Dummy013
+    400070: Dummy014
+    400072: Dummy015
+    400074: Dummy016
+    400076: Dummy017
+    400078: Dummy018
+    400080: Dummy019
+    400082: Dummy020
+    400084: Dummy021
+    400086: Dummy022
+    400088: Dummy023
+    400090: Dummy024
+    400092: Dummy029
+    400094: IK Chain001
+    400096: IK Chain002
+    400098: IK Chain003
+    400100: IK Chain004
+    400102: Point001
+    400104: Point002
+    400106: Point003
+    400108: Point004
+    400110: Point005
+    400112: Point006
+    400114: Point007
+    400116: Point008
+    400118: Point009
+    400120: Point010
+    400122: Point011
+    400124: Point012
+    400126: Particle View 001
+    400128: Particle View 001 1
+    400130: Particle View 001 2
+    400132: Particle View 001 3
+    400134: Particle View 001 4
+    400136: Particle View 001 5
+    400138: Particle View 001 6
+    400140: Particle View 002
+    400142: group1_pCube36
+    400144: Object001
+    400146: Object002
+    400148: Object003
+    400150: pCube1
+    2300000: Line001
+    2300002: Line002
+    2300004: Object002
+    2300006: Object003
+    3300000: Line001
+    3300002: Line002
+    3300004: Object002
+    3300006: Object003
+    4300000: Line001
+    4300002: Line002
+    4300004: group1_pCube36
+    4300006: pCube1
+    4300008: Object001
+    4300010: Object003
+    4300012: Object002
+    7400000: OD_Boss_M_Jellyfish_dmg
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: group1_pCube36
+    13700002: Object001
+    13700004: pCube1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: OD_Boss_M_Jellyfish_dmg
+      takeName: Take 001
+      firstFrame: 2
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Circle014
+        weight: 1
+      - path: Circle014/Circle005
+        weight: 1
+      - path: Circle014/Circle006
+        weight: 1
+      - path: Circle014/Circle007
+        weight: 1
+      - path: Circle014/Circle008
+        weight: 1
+      - path: Circle014/Circle009
+        weight: 1
+      - path: Circle014/Circle010
+        weight: 1
+      - path: Circle014/Circle011
+        weight: 1
+      - path: Circle014/Circle012
+        weight: 1
+      - path: Circle014/Circle013
+        weight: 1
+      - path: Circle014/Circle017
+        weight: 1
+      - path: Circle014/Dummy001
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003/Dummy004
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003/Dummy004/Circle015
+        weight: 1
+      - path: Circle014/Dummy025
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027/Dummy028
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027/Dummy028/Circle016
+        weight: 1
+      - path: Line001
+        weight: 1
+      - path: Line002
+        weight: 1
+      - path: Line004
+        weight: 1
+      - path: Line005
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 

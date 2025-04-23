@@ -1,0 +1,376 @@
+fileFormatVersion: 2
+guid: 2447131970846eb4e91473d38429603c
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Circle005
+    100002: Circle006
+    100004: Circle007
+    100006: Circle008
+    100008: Circle009
+    100010: Circle010
+    100012: Circle011
+    100014: Circle012
+    100016: Circle013
+    100018: Circle014
+    100020: Circle015
+    100022: Circle016
+    100024: Circle017
+    100026: Dummy001
+    100028: Dummy002
+    100030: Dummy003
+    100032: Dummy004
+    100034: Dummy005
+    100036: Dummy006
+    100038: Dummy007
+    100040: Dummy008
+    100042: Dummy009
+    100044: Dummy010
+    100046: Dummy011
+    100048: Dummy012
+    100050: Dummy013
+    100052: Dummy014
+    100054: Dummy015
+    100056: Dummy016
+    100058: Dummy017
+    100060: Dummy018
+    100062: Dummy019
+    100064: Dummy020
+    100066: Dummy021
+    100068: Dummy022
+    100070: Dummy023
+    100072: Dummy024
+    100074: Dummy025
+    100076: Dummy026
+    100078: Dummy027
+    100080: Dummy028
+    100082: Dummy029
+    100084: IK Chain001
+    100086: IK Chain002
+    100088: IK Chain003
+    100090: IK Chain004
+    100092: Line001
+    100094: Line002
+    100096: Line004
+    100098: Line005
+    100100: //RootNode
+    100102: Particle View 001
+    100104: Particle View 001 1
+    100106: Particle View 001 2
+    100108: Particle View 001 3
+    100110: Particle View 001 4
+    100112: Particle View 001 5
+    100114: Particle View 001 6
+    100116: Particle View 002
+    100118: Point001
+    100120: Point002
+    100122: Point003
+    100124: Point004
+    100126: Point005
+    100128: Point006
+    100130: Point007
+    100132: Point008
+    100134: Point009
+    100136: Point010
+    100138: Point011
+    100140: Point012
+    400000: Circle005
+    400002: Circle006
+    400004: Circle007
+    400006: Circle008
+    400008: Circle009
+    400010: Circle010
+    400012: Circle011
+    400014: Circle012
+    400016: Circle013
+    400018: Circle014
+    400020: Circle015
+    400022: Circle016
+    400024: Circle017
+    400026: Dummy001
+    400028: Dummy002
+    400030: Dummy003
+    400032: Dummy004
+    400034: Dummy005
+    400036: Dummy006
+    400038: Dummy007
+    400040: Dummy008
+    400042: Dummy009
+    400044: Dummy010
+    400046: Dummy011
+    400048: Dummy012
+    400050: Dummy013
+    400052: Dummy014
+    400054: Dummy015
+    400056: Dummy016
+    400058: Dummy017
+    400060: Dummy018
+    400062: Dummy019
+    400064: Dummy020
+    400066: Dummy021
+    400068: Dummy022
+    400070: Dummy023
+    400072: Dummy024
+    400074: Dummy025
+    400076: Dummy026
+    400078: Dummy027
+    400080: Dummy028
+    400082: Dummy029
+    400084: IK Chain001
+    400086: IK Chain002
+    400088: IK Chain003
+    400090: IK Chain004
+    400092: Line001
+    400094: Line002
+    400096: Line004
+    400098: Line005
+    400100: //RootNode
+    400102: Particle View 001
+    400104: Particle View 001 1
+    400106: Particle View 001 2
+    400108: Particle View 001 3
+    400110: Particle View 001 4
+    400112: Particle View 001 5
+    400114: Particle View 001 6
+    400116: Particle View 002
+    400118: Point001
+    400120: Point002
+    400122: Point003
+    400124: Point004
+    400126: Point005
+    400128: Point006
+    400130: Point007
+    400132: Point008
+    400134: Point009
+    400136: Point010
+    400138: Point011
+    400140: Point012
+    2300000: Line001
+    2300002: Line002
+    3300000: Line001
+    3300002: Line002
+    4300000: Line001
+    4300002: Line002
+    7400000: OD_Boss_M_Jellyfish_atk_01
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: OD_Boss_M_Jellyfish_atk_01
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Circle014
+        weight: 1
+      - path: Circle014/Circle005
+        weight: 1
+      - path: Circle014/Circle005/Dummy029
+        weight: 1
+      - path: Circle014/Circle005/Dummy029/Dummy015
+        weight: 1
+      - path: Circle014/Circle006
+        weight: 1
+      - path: Circle014/Circle006/Point002
+        weight: 1
+      - path: Circle014/Circle007
+        weight: 1
+      - path: Circle014/Circle007/Point003
+        weight: 1
+      - path: Circle014/Circle008
+        weight: 1
+      - path: Circle014/Circle008/Point005
+        weight: 1
+      - path: Circle014/Circle009
+        weight: 1
+      - path: Circle014/Circle009/Point006
+        weight: 1
+      - path: Circle014/Circle010
+        weight: 1
+      - path: Circle014/Circle010/Point008
+        weight: 1
+      - path: Circle014/Circle011
+        weight: 1
+      - path: Circle014/Circle011/Point009
+        weight: 1
+      - path: Circle014/Circle012
+        weight: 1
+      - path: Circle014/Circle012/Point011
+        weight: 1
+      - path: Circle014/Circle013
+        weight: 1
+      - path: Circle014/Circle013/Point012
+        weight: 1
+      - path: Circle014/Circle017
+        weight: 1
+      - path: Circle014/Dummy001
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003/Dummy004
+        weight: 1
+      - path: Circle014/Dummy001/Dummy002/Dummy003/Dummy004/Circle015
+        weight: 1
+      - path: Circle014/Dummy009
+        weight: 1
+      - path: Circle014/Dummy009/Dummy010
+        weight: 1
+      - path: Circle014/Dummy009/Dummy010/Dummy011
+        weight: 1
+      - path: Circle014/Dummy009/Dummy010/Dummy011/Dummy012
+        weight: 1
+      - path: Circle014/Dummy009/Dummy010/Dummy011/Dummy012/Dummy013
+        weight: 1
+      - path: Circle014/Dummy014
+        weight: 1
+      - path: Circle014/Dummy014/Dummy005
+        weight: 1
+      - path: Circle014/Dummy014/Dummy005/Dummy006
+        weight: 1
+      - path: Circle014/Dummy014/Dummy007
+        weight: 1
+      - path: Circle014/Dummy014/Dummy007/Dummy008
+        weight: 1
+      - path: Circle014/Dummy014/Dummy016
+        weight: 1
+      - path: Circle014/Dummy014/Dummy016/Dummy017
+        weight: 1
+      - path: Circle014/Dummy014/Dummy018
+        weight: 1
+      - path: Circle014/Dummy014/Dummy018/Dummy019
+        weight: 1
+      - path: Circle014/Dummy020
+        weight: 1
+      - path: Circle014/Dummy020/Dummy021
+        weight: 1
+      - path: Circle014/Dummy020/Dummy021/Dummy022
+        weight: 1
+      - path: Circle014/Dummy020/Dummy021/Dummy022/Dummy023
+        weight: 1
+      - path: Circle014/Dummy020/Dummy021/Dummy022/Dummy023/Dummy024
+        weight: 1
+      - path: Circle014/Dummy025
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027/Dummy028
+        weight: 1
+      - path: Circle014/Dummy025/Dummy026/Dummy027/Dummy028/Circle016
+        weight: 1
+      - path: Circle014/Point001
+        weight: 1
+      - path: Circle014/Point004
+        weight: 1
+      - path: Circle014/Point007
+        weight: 1
+      - path: Circle014/Point010
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: Line001
+        weight: 1
+      - path: Line002
+        weight: 1
+      - path: Line004
+        weight: 1
+      - path: Line005
+        weight: 1
+      - path: Particle View 001
+        weight: 1
+      - path: Particle View 001 1
+        weight: 1
+      - path: Particle View 001 2
+        weight: 1
+      - path: Particle View 001 3
+        weight: 1
+      - path: Particle View 001 4
+        weight: 1
+      - path: Particle View 001 5
+        weight: 1
+      - path: Particle View 001 6
+        weight: 1
+      - path: Particle View 002
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 

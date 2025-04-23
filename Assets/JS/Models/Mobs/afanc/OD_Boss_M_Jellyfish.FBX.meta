@@ -1,0 +1,229 @@
+fileFormatVersion: 2
+guid: dfb31fb977b580a41a1bc48d93068cb7
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Circle005
+    100002: Circle006
+    100004: Circle007
+    100006: Circle008
+    100008: Circle009
+    100010: Circle010
+    100012: Circle011
+    100014: Circle012
+    100016: Circle013
+    100018: Circle014
+    100020: Circle015
+    100022: Circle016
+    100024: Circle017
+    100026: Dummy001
+    100028: Dummy002
+    100030: Dummy003
+    100032: Dummy004
+    100034: Dummy005
+    100036: Dummy006
+    100038: Dummy007
+    100040: Dummy008
+    100042: Dummy009
+    100044: Dummy010
+    100046: Dummy011
+    100048: Dummy012
+    100050: Dummy013
+    100052: Dummy014
+    100054: Dummy015
+    100056: Dummy016
+    100058: Dummy017
+    100060: Dummy018
+    100062: Dummy019
+    100064: Dummy020
+    100066: Dummy021
+    100068: Dummy022
+    100070: Dummy023
+    100072: Dummy024
+    100074: Dummy025
+    100076: Dummy026
+    100078: Dummy027
+    100080: Dummy028
+    100082: Dummy029
+    100084: group1_pCube36
+    100086: IK Chain001
+    100088: IK Chain002
+    100090: IK Chain003
+    100092: IK Chain004
+    100094: jellyfish_m_boss_nurbsToPoly004
+    100096: Line001
+    100098: Line002
+    100100: Line004
+    100102: Line005
+    100104: Object001
+    100106: Object002
+    100108: Object003
+    100110: //RootNode
+    100112: Particle View 001
+    100114: Particle View 001 1
+    100116: Particle View 001 2
+    100118: Particle View 001 3
+    100120: Particle View 001 4
+    100122: Particle View 001 5
+    100124: Particle View 001 6
+    100126: Particle View 002
+    100128: Point001
+    100130: Point002
+    100132: Point003
+    100134: Point004
+    100136: Point005
+    100138: Point006
+    100140: Point007
+    100142: Point008
+    100144: Point009
+    100146: Point010
+    100148: Point011
+    100150: Point012
+    400000: Circle005
+    400002: Circle006
+    400004: Circle007
+    400006: Circle008
+    400008: Circle009
+    400010: Circle010
+    400012: Circle011
+    400014: Circle012
+    400016: Circle013
+    400018: Circle014
+    400020: Circle015
+    400022: Circle016
+    400024: Circle017
+    400026: Dummy001
+    400028: Dummy002
+    400030: Dummy003
+    400032: Dummy004
+    400034: Dummy005
+    400036: Dummy006
+    400038: Dummy007
+    400040: Dummy008
+    400042: Dummy009
+    400044: Dummy010
+    400046: Dummy011
+    400048: Dummy012
+    400050: Dummy013
+    400052: Dummy014
+    400054: Dummy015
+    400056: Dummy016
+    400058: Dummy017
+    400060: Dummy018
+    400062: Dummy019
+    400064: Dummy020
+    400066: Dummy021
+    400068: Dummy022
+    400070: Dummy023
+    400072: Dummy024
+    400074: Dummy025
+    400076: Dummy026
+    400078: Dummy027
+    400080: Dummy028
+    400082: Dummy029
+    400084: group1_pCube36
+    400086: IK Chain001
+    400088: IK Chain002
+    400090: IK Chain003
+    400092: IK Chain004
+    400094: jellyfish_m_boss_nurbsToPoly004
+    400096: Line001
+    400098: Line002
+    400100: Line004
+    400102: Line005
+    400104: Object001
+    400106: Object002
+    400108: Object003
+    400110: //RootNode
+    400112: Particle View 001
+    400114: Particle View 001 1
+    400116: Particle View 001 2
+    400118: Particle View 001 3
+    400120: Particle View 001 4
+    400122: Particle View 001 5
+    400124: Particle View 001 6
+    400126: Particle View 002
+    400128: Point001
+    400130: Point002
+    400132: Point003
+    400134: Point004
+    400136: Point005
+    400138: Point006
+    400140: Point007
+    400142: Point008
+    400144: Point009
+    400146: Point010
+    400148: Point011
+    400150: Point012
+    2300000: Line001
+    2300002: Line002
+    2300004: Object002
+    2300006: Object003
+    3300000: Line001
+    3300002: Line002
+    3300004: Object002
+    3300006: Object003
+    4300000: group1_pCube36
+    4300002: Object001
+    4300004: Line001
+    4300006: Line002
+    4300008: Object003
+    4300010: Object002
+    4300012: jellyfish_m_boss_nurbsToPoly004
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: group1_pCube36
+    13700002: jellyfish_m_boss_nurbsToPoly004
+    13700004: Object001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 

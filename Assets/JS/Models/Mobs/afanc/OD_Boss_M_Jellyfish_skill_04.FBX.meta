@@ -1,0 +1,336 @@
+fileFormatVersion: 2
+guid: 76bb7d7c2aafa1a47b500c8f0be8fa89
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Circle005
+    100002: Circle006
+    100004: Circle007
+    100006: Circle008
+    100008: Circle009
+    100010: Circle010
+    100012: Circle011
+    100014: Circle012
+    100016: Circle013
+    100018: Circle015
+    100020: Circle016
+    100022: Circle017
+    100024: Dummy001
+    100026: Dummy002
+    100028: Dummy003
+    100030: Dummy004
+    100032: Dummy005
+    100034: Dummy006
+    100036: Dummy007
+    100038: Dummy008
+    100040: Dummy009
+    100042: Dummy010
+    100044: Dummy011
+    100046: Dummy012
+    100048: Dummy013
+    100050: Dummy014
+    100052: Dummy015
+    100054: Dummy016
+    100056: Dummy017
+    100058: Dummy018
+    100060: Dummy019
+    100062: Dummy020
+    100064: Dummy021
+    100066: Dummy022
+    100068: Dummy023
+    100070: Dummy024
+    100072: Dummy025
+    100074: Dummy026
+    100076: Dummy027
+    100078: Dummy028
+    100080: Dummy029
+    100082: Object002
+    100084: Object003
+    100086: //RootNode
+    100088: Point001
+    100090: Point002
+    100092: Point003
+    100094: Point004
+    100096: Point005
+    100098: Point006
+    100100: Point007
+    100102: Point008
+    100104: Point009
+    100106: Point010
+    100108: Point011
+    100110: Point012
+    100112: Circle014
+    100114: IK Chain001
+    100116: IK Chain002
+    100118: IK Chain003
+    100120: IK Chain004
+    100122: Line001
+    100124: Line002
+    100126: Line004
+    100128: Line005
+    400000: Circle005
+    400002: Circle006
+    400004: Circle007
+    400006: Circle008
+    400008: Circle009
+    400010: Circle010
+    400012: Circle011
+    400014: Circle012
+    400016: Circle013
+    400018: Circle015
+    400020: Circle016
+    400022: Circle017
+    400024: Dummy001
+    400026: Dummy002
+    400028: Dummy003
+    400030: Dummy004
+    400032: Dummy005
+    400034: Dummy006
+    400036: Dummy007
+    400038: Dummy008
+    400040: Dummy009
+    400042: Dummy010
+    400044: Dummy011
+    400046: Dummy012
+    400048: Dummy013
+    400050: Dummy014
+    400052: Dummy015
+    400054: Dummy016
+    400056: Dummy017
+    400058: Dummy018
+    400060: Dummy019
+    400062: Dummy020
+    400064: Dummy021
+    400066: Dummy022
+    400068: Dummy023
+    400070: Dummy024
+    400072: Dummy025
+    400074: Dummy026
+    400076: Dummy027
+    400078: Dummy028
+    400080: Dummy029
+    400082: Object002
+    400084: Object003
+    400086: //RootNode
+    400088: Point001
+    400090: Point002
+    400092: Point003
+    400094: Point004
+    400096: Point005
+    400098: Point006
+    400100: Point007
+    400102: Point008
+    400104: Point009
+    400106: Point010
+    400108: Point011
+    400110: Point012
+    400112: Circle014
+    400114: IK Chain001
+    400116: IK Chain002
+    400118: IK Chain003
+    400120: IK Chain004
+    400122: Line001
+    400124: Line002
+    400126: Line004
+    400128: Line005
+    2300000: Object002
+    2300002: Object003
+    2300004: Line001
+    2300006: Line002
+    3300000: Object002
+    3300002: Object003
+    3300004: Line001
+    3300006: Line002
+    4300000: Object003
+    4300002: Object002
+    4300004: Line001
+    4300006: Line002
+    7400000: OD_Boss_M_Jellyfish_skill_04
+    9500000: //RootNode
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: OD_Boss_M_Jellyfish_skill_04
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 35
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Circle005
+        weight: 1
+      - path: Circle005/Dummy029
+        weight: 1
+      - path: Circle005/Dummy029/Dummy015
+        weight: 1
+      - path: Circle006
+        weight: 1
+      - path: Circle006/Point002
+        weight: 1
+      - path: Circle007
+        weight: 1
+      - path: Circle007/Point003
+        weight: 1
+      - path: Circle008
+        weight: 1
+      - path: Circle008/Point005
+        weight: 1
+      - path: Circle009
+        weight: 1
+      - path: Circle009/Point006
+        weight: 1
+      - path: Circle010
+        weight: 1
+      - path: Circle010/Point008
+        weight: 1
+      - path: Circle011
+        weight: 1
+      - path: Circle011/Point009
+        weight: 1
+      - path: Circle012
+        weight: 1
+      - path: Circle012/Point011
+        weight: 1
+      - path: Circle013
+        weight: 1
+      - path: Circle013/Point012
+        weight: 1
+      - path: Circle017
+        weight: 1
+      - path: Dummy001
+        weight: 1
+      - path: Dummy001/Dummy002
+        weight: 1
+      - path: Dummy001/Dummy002/Dummy003
+        weight: 1
+      - path: Dummy001/Dummy002/Dummy003/Dummy004
+        weight: 1
+      - path: Dummy001/Dummy002/Dummy003/Dummy004/Circle015
+        weight: 1
+      - path: Dummy009
+        weight: 1
+      - path: Dummy009/Dummy010
+        weight: 1
+      - path: Dummy009/Dummy010/Dummy011
+        weight: 1
+      - path: Dummy009/Dummy010/Dummy011/Dummy012
+        weight: 1
+      - path: Dummy009/Dummy010/Dummy011/Dummy012/Dummy013
+        weight: 1
+      - path: Dummy014
+        weight: 1
+      - path: Dummy014/Dummy005
+        weight: 1
+      - path: Dummy014/Dummy005/Dummy006
+        weight: 1
+      - path: Dummy014/Dummy007
+        weight: 1
+      - path: Dummy014/Dummy007/Dummy008
+        weight: 1
+      - path: Dummy014/Dummy016
+        weight: 1
+      - path: Dummy014/Dummy016/Dummy017
+        weight: 1
+      - path: Dummy014/Dummy018
+        weight: 1
+      - path: Dummy014/Dummy018/Dummy019
+        weight: 1
+      - path: Dummy020
+        weight: 1
+      - path: Dummy020/Dummy021
+        weight: 1
+      - path: Dummy020/Dummy021/Dummy022
+        weight: 1
+      - path: Dummy020/Dummy021/Dummy022/Dummy023
+        weight: 1
+      - path: Dummy020/Dummy021/Dummy022/Dummy023/Dummy024
+        weight: 1
+      - path: Dummy025
+        weight: 1
+      - path: Dummy025/Dummy026
+        weight: 1
+      - path: Dummy025/Dummy026/Dummy027
+        weight: 1
+      - path: Dummy025/Dummy026/Dummy027/Dummy028
+        weight: 1
+      - path: Dummy025/Dummy026/Dummy027/Dummy028/Circle016
+        weight: 1
+      - path: Point001
+        weight: 1
+      - path: Point004
+        weight: 1
+      - path: Point007
+        weight: 1
+      - path: Point010
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  userData: 
